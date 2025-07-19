@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Colors
@@ -37,10 +38,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,7 +57,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.example.littlelemon.ui.theme.LittleLemonTheme
-
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 class MainActivity : ComponentActivity() {
@@ -64,6 +68,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LittleLemonTheme {
+                val systemUiController = rememberSystemUiController()
+
+                systemUiController.setStatusBarColor(
+                    color = Color(0xFF0F9D58), // any color you want
+                    darkIcons = true // use true for black icons, false for white
+                )
                 var context= LocalContext.current
          app(context )
             }
@@ -77,9 +87,9 @@ fun app(context: Context){
         Box(
             modifier = Modifier
                 .fillMaxWidth().height(80.dp)
-                .background(Color(0xFF0F9D58)) // Your background content
+                .background(Color(0xFF0F9D58))
         ) {
-            // Position at top (add status bar padding if needed)
+
             PureTransparentTopBar(
                 title = "إسلامي",
                 onBackClick = { /* Handle back */ },
@@ -107,19 +117,31 @@ fun mainscreen(navController: NavController){
                 ,contentAlignment = Alignment.Center
             ) {
                 Box(  modifier = Modifier
-                    .background(Color.LightGray)
                     .fillMaxWidth(0.8f)
-                    .height(120.dp)
+                    .height(190.dp)
                     .align(Alignment.Center)) {
-                    Text("اخر قرأة",)
-                    Button(onClick = {
-                        navController.navigate(quran.route)
-                    }
-                    )
-                    {
-                        Text(" تابع القرأة",)
-                    }
+                    Image(painter=painterResource(id=R.drawable.back),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop
+                        , modifier = Modifier.matchParentSize().clip(RoundedCornerShape(16.dp)))
 
+                   Row (Modifier.padding(10.dp).fillMaxWidth(),
+                       horizontalArrangement = Arrangement.SpaceAround ){
+                       Column {
+                           Text("اخر قرأة",color=Color.White)
+                           Spacer(Modifier.height(15.dp))
+                           Button(onClick = {
+                               navController.navigate(quran.route)
+                           }, colors = ButtonDefaults.buttonColors(Color.White))
+                           {
+                               Text(" تابع القرأة", color = Color.Black)
+                           }
+                       }
+                       Icon(painterResource(id=R.drawable.quran1),
+                           contentDescription = "",
+                           Modifier.size(50.dp), tint = Color.White
+                       )
+                   }
                 }
             }
             Column(
@@ -160,13 +182,14 @@ fun mainscreen(navController: NavController){
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
                         border = BorderStroke(10.dp, color = Color.Transparent)
                     ) {
-                        Text(text = "الاحاديث", textAlign = TextAlign.Start, fontSize = 20.sp)
-                        Spacer(modifier = Modifier.width(30.dp))
-                        Icon(
-                            painter = painterResource(id = R.drawable.rub_el_hizb), // Your custom icon
-                            contentDescription = "quran",
-                            modifier = Modifier.size(86.dp), tint = Color.Unspecified
-                        )
+                            Text(text = "حديث", textAlign = TextAlign.Start, fontSize = 20.sp,
+                                modifier=Modifier.weight(1f))
+                                    Spacer(Modifier.width(10.dp))
+                            Icon(
+                                painter = painterResource(id = R.drawable.rub_el_hizb), // Your custom icon
+                                contentDescription = "hadith",
+                                modifier = Modifier.size(36.dp).fillMaxWidth(.35f), tint = Color.Unspecified
+                            )
                     }
                 }
 
@@ -186,12 +209,12 @@ fun mainscreen(navController: NavController){
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
                         border = BorderStroke(10.dp, color = Color.Transparent)
                     ) {
-                        Text(text = "اذكار", textAlign = TextAlign.Start, fontSize = 20.sp)
-                        Spacer(modifier = Modifier.width(30.dp))
+                        Text(text = "اذكار", textAlign = TextAlign.Start, fontSize = 20.sp, modifier = Modifier.fillMaxWidth(.6f))
+                        Spacer(modifier = Modifier.width(10.dp))
                         Icon(
                             painter = painterResource(id = R.drawable.open_hands), // Your custom icon
-                            contentDescription = "quran",
-                            modifier = Modifier.size(36.dp), tint = Color.Unspecified
+                            contentDescription = "azkar",
+                            modifier = Modifier.size(36.dp).fillMaxWidth(.38f), tint = Color.Unspecified
                         )
                     }
                     Spacer(Modifier.width(10.dp))
@@ -204,12 +227,13 @@ fun mainscreen(navController: NavController){
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
                         border = BorderStroke(10.dp, color = Color.Transparent)
                     ) {
-                        Text(text = "السبحة", textAlign = TextAlign.Start, fontSize = 20.sp)
-                        Spacer(modifier = Modifier.width(30.dp))
+                        Text(text = "السبحة", textAlign = TextAlign.Left, fontSize = 20.sp,
+                           modifier = Modifier.fillMaxWidth(.6f) )
+                        Spacer(modifier = Modifier.width(10.dp))
                         Icon(
-                            painter = painterResource(id = R.drawable.tasbih), // Your custom icon
-                            contentDescription = "quran",
-                            modifier = Modifier.size(36.dp), tint = Color.Unspecified
+                            painter = painterResource(id = R.drawable.tasbih),
+                            contentDescription = "sebha",
+                            modifier = Modifier.size(50.dp).fillMaxWidth(0.4f), tint = Color.Unspecified
                         )
                     }
                 }
@@ -226,7 +250,7 @@ fun mainscreen(navController: NavController){
                     Spacer(modifier = Modifier.width(30.dp))
                     Icon(
                         painter = painterResource(id = R.drawable.islamic), // Your custom icon
-                        contentDescription = "quran",
+                        contentDescription = "praying",
                         modifier = Modifier.size(36.dp), tint = Color.Unspecified
                     )
                 }
