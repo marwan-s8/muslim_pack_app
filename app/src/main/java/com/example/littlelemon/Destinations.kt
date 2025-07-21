@@ -19,3 +19,7 @@ object sunnah : Destinations{
 object azkar : Destinations{
     override val route = "azkar"
 }
+
+object sebha : Destinations{
+    override val route = "sebha"
+}

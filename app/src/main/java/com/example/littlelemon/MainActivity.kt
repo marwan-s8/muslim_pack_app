@@ -167,7 +167,7 @@ fun mainscreen(navController: NavController){
                         Text(text = "القران", textAlign = TextAlign.Left, fontSize = 20.sp)
                         Spacer(modifier = Modifier.width(30.dp))
                         Icon(
-                            painter = painterResource(id = R.drawable.quran), // Your custom icon
+                            painter = painterResource(id = R.drawable.quran), 
                             contentDescription = "quran",
                             modifier = Modifier.size(36.dp), tint = Color.Unspecified
                         )
@@ -220,7 +220,7 @@ fun mainscreen(navController: NavController){
                     Spacer(Modifier.width(10.dp))
                     Button(
                         onClick = {
-
+                            navController.navigate(sebha.route)
                         },
                         modifier = Modifier.padding(5.dp).height(100.dp)
                             .fillMaxWidth(0.7.toFloat()),
@@ -261,12 +261,10 @@ fun mainscreen(navController: NavController){
     }
 }
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     LittleLemonTheme {
-
+        sebhaScreen()
     }
 }

@@ -29,6 +29,9 @@ fun navigation (context: Context){
         composable(azkar.route){
             AdhkarApp(context)
         }
+        composable(sebha.route){
+            sebhaScreen()
+        }
     }
 
 }
