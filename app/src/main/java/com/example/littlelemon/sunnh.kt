@@ -34,7 +34,7 @@ fun SunnahScreen() {
     LaunchedEffect(Unit) {
         isLoading = true
         try {
-            hadith = SunnahApi.getOneHadith(1)
+            hadith = SunnahApi.getOneHadith(3)
         } catch (e: Exception) {
             error = e.message ?: "Failed to load Hadith"
         } finally {

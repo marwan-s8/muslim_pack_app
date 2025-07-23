@@ -1,3 +1,4 @@
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +25,7 @@ fun PureTransparentTopBar(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().background(color = Color(0xFF0F9D58))
             .padding(16.dp), // Adjust padding as needed
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.littlelemon.ui.theme.LittleLemonTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -82,23 +83,23 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun app(context: Context){
-    Column (modifier = Modifier.fillMaxWidth()){
-        Box(
-            modifier = Modifier
-                .fillMaxWidth().height(80.dp)
-                .background(Color(0xFF0F9D58))
-        ) {
+fun app(context: Context?=null){
+    val navController= rememberNavController()
+    Scaffold (topBar = { PureTransparentTopBar(
+        title = "إسلامي",
+        onBackClick = { /* Handle back */ },
+        onSearchClick = { /* Handle search */ }
+    )}
+    , backgroundColor = Color.White,
+        bottomBar = {BotNav(navController)}
 
-            PureTransparentTopBar(
-                title = "إسلامي",
-                onBackClick = { /* Handle back */ },
-                onSearchClick = { /* Handle search */ }
-            )
-        }
+    ){  Column (modifier = Modifier.fillMaxWidth().padding(it)){
+
         Spacer(Modifier.width(20.dp))
-        navigation(context)
-    }
+        if(context!=null)
+        navigation(context,navController)
+    } }
+
 
 }
 
@@ -265,6 +266,6 @@ fun mainscreen(navController: NavController){
 @Composable
 fun GreetingPreview() {
     LittleLemonTheme {
-        sebhaScreen()
+        app()
     }
 }
