@@ -29,7 +29,7 @@ fun PureTransparentTopBar(
             .padding(16.dp), // Adjust padding as needed
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 1. Back Button
+        // 1. drawer opening
         IconButton(onClick = onBackClick) {
             Icon(
                 modifier = Modifier.size(30.dp),

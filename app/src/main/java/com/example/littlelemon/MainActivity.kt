@@ -35,7 +35,10 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.rememberDrawerState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,6 +62,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.littlelemon.ui.theme.LittleLemonTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -84,11 +88,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun app(context: Context?=null){
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
     val navController= rememberNavController()
-    Scaffold (topBar = { PureTransparentTopBar(
-        title = "إسلامي",
-        onBackClick = { /* Handle back */ },
-        onSearchClick = { /* Handle search */ }
+
+    Scaffold (
+        scaffoldState=scaffoldState,
+        drawerContent = {drawer(scaffoldState,scope)},
+        drawerBackgroundColor = Color.White,
+        topBar = { PureTransparentTopBar(
+            title = "إسلامي",
+            onBackClick = { scope.launch { scaffoldState.drawerState.open() } },
+            onSearchClick = { /* Handle search */ }
     )}
     , backgroundColor = Color.White,
         bottomBar = {BotNav(navController)}

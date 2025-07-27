@@ -23,18 +23,27 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.serialization.gson.gson
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.ui.unit.sp
+
+
 @Composable
 fun SunnahScreen() {
     var hadith by remember { mutableStateOf<HadithResponse?>(null) }
     var isLoading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
-
-    LaunchedEffect(Unit) {
+    var count by remember { mutableStateOf(3) }
+    LaunchedEffect(count) {
         isLoading = true
         try {
-            hadith = SunnahApi.getOneHadith(3)
+            hadith = SunnahApi.getOneHadith(count)
         } catch (e: Exception) {
             error = e.message ?: "Failed to load Hadith"
         } finally {
@@ -47,11 +56,19 @@ fun SunnahScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when {
-            isLoading -> CircularProgressIndicator()
-            error != null -> Text("Error: $error", color = Color.Red)
-            hadith != null -> HadithContent(hadith!!)
-            else -> Text("No Hadith loaded")
+        Box (Modifier.fillMaxSize()){
+            when {
+                isLoading -> CircularProgressIndicator(color = Color(0xFF0F9D58))
+                error != null -> Text("Error: $error", color = Color.Red)
+                hadith != null -> {HadithContent(hadith!!)
+                    Button(onClick = {count++
+                                     }, colors = ButtonDefaults.buttonColors(Color(0xFF0F9D58))
+                             , modifier = Modifier.size(160.dp,80.dp).align(alignment = Alignment.BottomCenter).offset(0.dp,-20.dp))
+                    {
+                        Text("التالي")
+                    }}
+                else -> Text("No Hadith loaded")
+            }
         }
     }
 }
@@ -64,7 +81,7 @@ fun HadithContent(hadith: HadithResponse) {
     ) {
         Text(
             text = hadith.data.contents.arab,
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge, fontSize = 20.sp
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(

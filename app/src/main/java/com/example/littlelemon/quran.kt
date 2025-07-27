@@ -34,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -185,7 +186,7 @@ fun AyahItem(ayah: Ayah) {
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 24.sp,
                 textAlign = TextAlign.Right
-            ),
+            ), lineHeight = 40.sp,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -204,7 +205,7 @@ fun FullScreenLoading() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = Color(0xFF0F9D58))
     }
 }
 
