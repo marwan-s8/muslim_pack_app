@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,7 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.littlelemon.ui.theme.LittleLemonTheme
+
 
 @Composable
 fun sebhaScreen(){
@@ -55,16 +56,15 @@ fun sebhaScreen(){
                colors = ButtonDefaults.buttonColors(Color(0xFF0F9D58))
            )
            {
-               Text("${counter} : عدد التسبيحات", fontSize = 20.sp)
+               Text("${counter} : عدد التسبيحات", fontSize = 20.sp, color = MaterialTheme.colorScheme.background)
            }
 
            Button(onClick = {
                counter=0
                saveCounter(counter)
-           },
-               modifier = Modifier.size(160.dp,80.dp).align(Alignment.BottomCenter).offset(0.dp,-20.dp),
-               colors = ButtonDefaults.buttonColors(Color.Black)) {
-               Text("البداء من جديد ", color = Color.White)
+           }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.onBackground),
+               modifier = Modifier.size(160.dp,80.dp).align(Alignment.BottomCenter).offset(0.dp,-20.dp)) {
+               Text("البداء من جديد ", color = MaterialTheme.colorScheme.background)
            }
 
        }

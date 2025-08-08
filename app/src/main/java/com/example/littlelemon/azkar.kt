@@ -3,6 +3,7 @@ package com.example.littlelemon
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,9 +30,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Button
 import androidx.compose.material.contentColorFor
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
@@ -79,15 +83,11 @@ fun AdhkarApp(context: Context) {
     val adhkarData = remember { mutableStateOf<Adhkar?>(null) }
     val selectedCategory = remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(selectedCategory) {
         adhkarData.value = AzkarApi.loadAdhkarFromAssets(context)
     }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Category Filter Chips
-        Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
-            verticalAlignment = Alignment.CenterVertically
+    if (selectedCategory.value == null){
+        Column (modifier = Modifier.fillMaxSize().padding(16.dp),
         ) {
             listOf(
                 "أذكار الصباح",
@@ -97,26 +97,32 @@ fun AdhkarApp(context: Context) {
                 "أذكار الاستيقاظ"
                 // Add other categories as needed
             ).forEach { category ->
-                FilterChip(
-                    selected = selectedCategory.value == category,
+                Button(colors = ButtonDefaults.buttonColors(Color.Gray),
                     onClick = {
-                        selectedCategory.value = if (selectedCategory.value == category) null else category
+                        selectedCategory.value = category
+
                     },
-                    label = { Text(category) },
-                    modifier = Modifier.padding(4.dp)
+                    modifier = Modifier.fillMaxWidth().height(100.dp).padding(16.dp),
+                    content = { Text(category, color = Color.White ) }
                 )
             }
         }
+    }
+    else {
+        filter(adhkarData,selectedCategory)
+    }
 
-        // Filtered Content
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(
-                adhkarData.value?.getAllAzkar()?.filter {
-                    selectedCategory.value == null || it.category == selectedCategory.value
-                } ?: emptyList()
-            ) { dhikr ->
-                DhikrCard(dhikr)
-            }
+}
+
+@Composable
+fun filter (adhkarData: MutableState<Adhkar?>,selectedCategory: MutableState<String?>) {
+    LazyColumn() {
+        items(
+            adhkarData.value?.getAllAzkar()?.filter {
+                selectedCategory.value == null || it.category == selectedCategory.value
+            } ?: emptyList()
+        ) { dhikr ->
+            DhikrCard(dhikr)
         }
     }
 }
@@ -132,7 +138,7 @@ fun DhikrCard(dhikr: Dhikr) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(dhikr.content, style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Text("الترتيب: ${dhikr.count}", style = MaterialTheme.typography.bodySmall)
+            Text("التكرار: ${dhikr.count}", style = MaterialTheme.typography.bodySmall)
             if (dhikr.reference.isNotEmpty()) {
                 Text("المرجع: ${dhikr.reference}", style = MaterialTheme.typography.labelSmall)
             }

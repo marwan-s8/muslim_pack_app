@@ -65,7 +65,7 @@ fun SunnahScreen() {
                                      }, colors = ButtonDefaults.buttonColors(Color(0xFF0F9D58))
                              , modifier = Modifier.size(160.dp,80.dp).align(alignment = Alignment.BottomCenter).offset(0.dp,-20.dp))
                     {
-                        Text("التالي")
+                        Text("التالي", fontSize = 24.sp, color = Color.White)
                     }}
                 else -> Text("No Hadith loaded")
             }
@@ -81,7 +81,8 @@ fun HadithContent(hadith: HadithResponse) {
     ) {
         Text(
             text = hadith.data.contents.arab,
-            style = MaterialTheme.typography.bodyLarge, fontSize = 20.sp
+            style = MaterialTheme.typography.bodyLarge, fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(

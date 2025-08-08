@@ -1,5 +1,7 @@
 package com.example.littlelemon
 
+import android.content.SharedPreferences
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +17,9 @@ import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 
@@ -27,19 +31,27 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun drawer(scaffoldState: ScaffoldState,scope:CoroutineScope){
-    var tog by remember { mutableStateOf(false) }
-    Column(modifier = Modifier.fillMaxSize()){
+fun drawer(  scaffoldState: ScaffoldState,
+             scope: CoroutineScope,
+             darkmodeon: SharedPreferences,
+             dark: Boolean,
+             onThemeChange: (Boolean) -> Unit){
+
+
+
+    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)){
         Row (modifier = Modifier.fillMaxWidth(0.9f).padding(10.dp), horizontalArrangement = Arrangement.Center) {
-            Text("dark mode")
+            Text( if(dark) "Dark mode" else "Light mode", color = MaterialTheme.colorScheme.onBackground)
             Spacer(modifier = Modifier.width(16.dp))
-            Switch(checked = tog, onCheckedChange ={tog = it} )
+            Switch(checked = dark, onCheckedChange ={ checked ->
+                darkmodeon.edit().putBoolean("darkmodeon", checked).apply()
+                onThemeChange(checked) } )
         }
 
         IconButton(onClick = {scope.launch { scaffoldState.drawerState.close() }}
             ,Modifier.padding(10.dp).fillMaxWidth(.9f)
         ) {
-            Icon(Icons.Filled.ExitToApp, contentDescription = "")
+            Icon(Icons.Filled.ExitToApp, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
         }
     }
 

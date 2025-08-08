@@ -8,6 +8,7 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,12 +70,13 @@ fun BotNav (navController: NavHostController){
     //if (currentRoute == Home.route) return       //this for hide navbot while be in home
     val indexsel = rememberSaveable { mutableStateOf(0)  }
 
-    BottomNavigation(modifier = Modifier.height(56.dp)) {
+    BottomNavigation(modifier = Modifier.height(56.dp), backgroundColor = MaterialTheme.colorScheme.onBackground) {
         selist.fastForEachIndexed{index,item ->
         BottomNavigationItem(
-            label = { Text(item.title,fontSize = 10.sp,
+            label = { Text(item.title,fontSize = 10.sp, color = MaterialTheme.colorScheme.background,
                 modifier = Modifier.padding(top = 2.dp)) },
-            icon = { Icon(painterResource(id=item.iconResId), contentDescription = "",modifier = Modifier.size(20.dp)) },
+            icon = { Icon(painterResource(id=item.iconResId), contentDescription = ""
+                ,modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.background) },
             selected =index==indexsel.value ,
             onClick = {indexsel.value=index
             navController.navigate(selist[index].route){

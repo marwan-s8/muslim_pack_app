@@ -25,6 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -127,21 +129,24 @@ fun SurahItem(surah: Surah, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(8.dp)
             .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(1.dp),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onSurface)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = "${surah.number}. ${surah.name}",
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = surah.englishName,
                 style = MaterialTheme.typography.titleMedium
+                , color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = "Verses: ${surah.numberOfAyahs} | ${surah.revelationType}",
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }
@@ -153,10 +158,11 @@ fun SurahDetailScreen(surah: SurahContent, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("${surah.number}. ${surah.name}") },
+                title = { Text("${surah.number}. ${surah.name}", color = MaterialTheme.colorScheme.onBackground) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back",
+                            tint =MaterialTheme.colorScheme.onBackground )
                     }
                 }
             )

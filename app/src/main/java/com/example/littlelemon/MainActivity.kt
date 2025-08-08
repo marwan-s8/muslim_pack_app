@@ -3,6 +3,7 @@ package com.example.littlelemon
 import PureTransparentTopBar
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,7 +31,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Colors
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
@@ -38,7 +39,12 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,7 +66,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.littlelemon.ui.theme.LittleLemonTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.launch
 
@@ -72,36 +77,42 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            LittleLemonTheme {
+            var context= LocalContext.current
+            val darkmodeon  = remember { context.getSharedPreferences("darkmode", Context.MODE_PRIVATE) }
+            var dark by remember { mutableStateOf( darkmodeon.getBoolean("darkmodeon",false)) }
+            myTheme (dark){
                 val systemUiController = rememberSystemUiController()
-
                 systemUiController.setStatusBarColor(
                     color = Color(0xFF0F9D58), // any color you want
                     darkIcons = true // use true for black icons, false for white
                 )
-                var context= LocalContext.current
-         app(context )
+               Surface(  modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background) {
+                    app(context ,darkmodeon,dark){ newValue ->
+                        dark = newValue
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun app(context: Context?=null){
+fun app(context: Context?=null, prefs: SharedPreferences,dark: Boolean,onThemeChange: (Boolean) -> Unit){
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     val navController= rememberNavController()
 
     Scaffold (
         scaffoldState=scaffoldState,
-        drawerContent = {drawer(scaffoldState,scope)},
+        drawerContent = {drawer(scaffoldState,scope,prefs, dark, onThemeChange)},
         drawerBackgroundColor = Color.White,
         topBar = { PureTransparentTopBar(
             title = "إسلامي",
             onBackClick = { scope.launch { scaffoldState.drawerState.open() } },
             onSearchClick = { /* Handle search */ }
     )}
-    , backgroundColor = Color.White,
+    , backgroundColor = MaterialTheme.colorScheme.background,
         bottomBar = {BotNav(navController)}
 
     ){  Column (modifier = Modifier.fillMaxWidth().padding(it)){
@@ -173,7 +184,7 @@ fun mainscreen(navController: NavController){
                         },
                         modifier = Modifier.padding(5.dp).height(100.dp)
                             .fillMaxWidth(0.4.toFloat()),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                        colors = ButtonDefaults.buttonColors(backgroundColor =Color(0xf0CDEDBB)),
                         border = BorderStroke(10.dp, color = Color.Transparent)
                     ) {
                         Text(text = "القران", textAlign = TextAlign.Left, fontSize = 20.sp)
@@ -191,7 +202,7 @@ fun mainscreen(navController: NavController){
                         },
                         modifier = Modifier.padding(5.dp).height(120.dp)
                             .fillMaxWidth(0.7.toFloat()),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xf0CDEDBB)),
                         border = BorderStroke(10.dp, color = Color.Transparent)
                     ) {
                             Text(text = "حديث", textAlign = TextAlign.Start, fontSize = 20.sp,
@@ -218,7 +229,7 @@ fun mainscreen(navController: NavController){
                         },
                         modifier = Modifier.padding(5.dp).height(120.dp).fillMaxWidth(0.4.toFloat())
                             .offset(y = (-20).dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xffCDEDBB)),
                         border = BorderStroke(10.dp, color = Color.Transparent)
                     ) {
                         Text(text = "اذكار", textAlign = TextAlign.Start, fontSize = 20.sp, modifier = Modifier.fillMaxWidth(.6f))
@@ -236,7 +247,7 @@ fun mainscreen(navController: NavController){
                         },
                         modifier = Modifier.padding(5.dp).height(100.dp)
                             .fillMaxWidth(0.7.toFloat()),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xf0CDEDBB)),
                         border = BorderStroke(10.dp, color = Color.Transparent)
                     ) {
                         Text(text = "السبحة", textAlign = TextAlign.Left, fontSize = 20.sp,
@@ -255,7 +266,7 @@ fun mainscreen(navController: NavController){
                     onClick = {
 
                     }, modifier = Modifier.fillMaxWidth().padding(5.dp).height(50.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xf0CDEDBB)),
                     border = BorderStroke(2.dp, color = Color(color = R.color.teal_200))
                 ) {
                     Text(text = "الصلاة", textAlign = TextAlign.Start, fontSize = 20.sp)
@@ -276,7 +287,7 @@ fun mainscreen(navController: NavController){
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    LittleLemonTheme {
-        app()
+    myTheme  {
+
     }
 }

@@ -1,10 +1,22 @@
 package com.example.littlelemon.ui.theme
 
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
-val primary = Color.White
-val DarkPrimary = Color.Black
+
+ val LightColors = lightColorScheme(
+    primary = Color(0xFF6200EE),
+    onPrimary = Color.White,
+    background = Color.White,
+    onBackground = Color.Black,
+     onSurface = Color(0xebf4f3ff)
+)
+
+ val DarkColors = darkColorScheme(
+    primary = Color(0xFFBB86FC),
+    onPrimary = Color.Black,
+    background = Color.Black,
+    onBackground = Color.White,
+     onSurface = Color(0xff4A4A4A)
+)
